@@ -1,167 +1,172 @@
----
-name: academic-literature-search
-description: \u4e13\u4e1a\u7684\u5b66\u672f\u6587\u732e\u68c0\u7d22\u5de5\u5177\uff0c\u96c6\u6210\u4e86Semantic Scholar\u3001Crossref\u3001PubMed\u3001arXiv\u7b49\u591a\u4e2a\u5b66\u672f\u6570\u636e\u5e93
-version: 2.0.0
-author: OpenClaw Community
-permissions:
-  - \u7f51\u7edc\u8bbf\u95ee\u6743\u9650
-  - \u6587\u4ef6\u8bfb\u5199\u6743\u9650
-requires:
-  env:
-    - SEMANTIC_SCHOLAR_API_KEY
-    - CROSSREF_API_EMAIL
-    - PUBMED_API_KEY
-  bins:
-    - python3
-  anyBins:
-    - curl
-  pips:
-    - requests>=2.28.0
-    - aiohttp>=3.8.0
-    - pandas>=1.5.0
-    - pyyaml>=6.0
-install: |
-  pip install -r requirements.txt
-metadata:
-  openclaw.emoji: "\ud83d\udcda"
-  category: "research"
-  tags: ["academic", "literature", "research", "papers", "scholarly"]
----
+# 学术文献检索技能
 
-# \u5b66\u672f\u6587\u732e\u68c0\u7d22\u6280\u80fd
+## 概述
 
-## \u6982\u8ff0
-\u8fd9\u662f\u4e00\u4e2a\u4e13\u6ce8\u4e8e\u5b66\u672f\u6587\u732e\u68c0\u7d22\u7684\u4e13\u4e1a\u5de5\u5177\uff0c\u96c6\u6210\u4e86\u591a\u4e2a\u6743\u5a01\u5b66\u672f\u6570\u636e\u5e93\uff0c\u63d0\u4f9b\u5168\u9762\u3001\u5feb\u901f\u3001\u51c6\u786e\u7684\u6587\u732e\u68c0\u7d22\u670d\u52a1\u3002\u652f\u6301\u591a\u6570\u636e\u5e93\u5e76\u53d1\u68c0\u7d22\u3001\u9ad8\u7ea7\u8fc7\u6ee4\u3001\u667a\u80fd\u6392\u5e8f\u548c\u591a\u79cd\u8f93\u51fa\u683c\u5f0f\u3002
+这是一个专注于学术文献检索的专业工具，集成了多个权威学术数据库，提供全面、快速、准确的文献检索服务。支持多数据库并发检索、高级过滤、智能排序和多种输出格式。
 
-## \u6838\u5fc3\u529f\u80fd
+## 核心功能
 
-### \ud83d\udd0d \u5f3a\u5927\u7684\u68c0\u7d22\u80fd\u529b
-- **\u591a\u6570\u636e\u5e93\u96c6\u6210**\uff1aSemantic Scholar\u3001Crossref\u3001arXiv\u3001PubMed
-- **\u667a\u80fd\u67e5\u8be2\u89e3\u6790**\uff1a\u81ea\u7136\u8bed\u8a00\u3001\u5e03\u5c14\u8fd0\u7b97\u3001\u5b57\u6bb5\u9650\u5b9a\u3001\u77ed\u8bed\u641c\u7d22
-- **\u5e76\u53d1\u68c0\u7d22**\uff1a\u540c\u65f6\u67e5\u8be2\u591a\u4e2a\u6570\u636e\u5e93\uff0c\u6beb\u79d2\u7ea7\u54cd\u5e94
-- **\u9ad8\u7ea7\u8fc7\u6ee4**\uff1a\u5e74\u4efd\u3001\u5f15\u7528\u6570\u3001\u671f\u520a\u7c7b\u578b\u3001\u5f00\u653e\u83b7\u53d6\u3001\u8bed\u8a00\u7b49
+### 🔍 强大的检索能力
 
-### 2. \u9ad8\u7ea7\u68c0\u7d22\u7279\u6027
-- **\u81ea\u7136\u8bed\u8a00\u67e5\u8be2**
-- **\u5e03\u5c14\u8fd0\u7b97\u7b26** (AND, OR, NOT)
-- **\u5b57\u6bb5\u9650\u5b9a\u641c\u7d22** (title:, author:, year:)
-- **\u8303\u56f4\u641c\u7d22** (year:2020-2024, citations:>100)
-- **\u901a\u914d\u7b26\u641c\u7d22**
+- **多数据库集成**：Semantic Scholar、Crossref、arXiv、PubMed
+- **智能查询解析**：自然语言、布尔运算、字段限定、短语搜索
+- **并发检索**：同时查询多个数据库，毫秒级响应
+- **高级过滤**：年份、引用数、期刊类型、开放获取、语言等
 
-### \ud83c\udfaf \u7cbe\u51c6\u7684\u7ed3\u679c\u5904\u7406
-- **\u667a\u80fd\u53bb\u91cd**\uff1a\u57fa\u4e8eDOI\u3001\u6807\u9898\u3001\u4f5c\u8005\u7b49\u591a\u7ef4\u5ea6\u53bb\u91cd
-- **\u591a\u7ef4\u5ea6\u6392\u5e8f**\uff1a\u5f15\u7528\u6570\u3001\u5e74\u4efd\u3001\u76f8\u5173\u6027\u3001\u5f71\u54cd\u529b\u3001\u8d8b\u52bf
-- **\u9ad8\u7ea7\u8fc7\u6ee4**\uff1a\uff08\u671f\u520a\u3001\u5f00\u653e\u83b7\u53d6\u3001\u6587\u732e\u7c7b\u578b\uff09
-- **\u7ed3\u679c\u4e30\u5bcc**\uff1a\u81ea\u52a8\u8865\u5145\u5143\u6570\u636e\u3001\u8ba1\u7b97\u5f71\u54cd\u529b\u6307\u6807
-- **\u8d28\u91cf\u8bc4\u5206**\uff1a\u7efc\u5408\u8bc4\u5206\u7cfb\u7edf\uff0c\u63d0\u4f9b\u6700\u4f73\u7ed3\u679c
+### 📖 高级检索特性
 
-### \ud83d\udcca \u4e30\u5bcc\u7684\u8f93\u51fa\u683c\u5f0f
-- **Markdown**\uff1a\u9002\u5408\u9605\u8bfb\u548c\u7b14\u8bb0
-- **JSON**\uff1a\u9002\u5408\u7a0b\u5e8f\u5904\u7406
-- **CSV/Excel**\uff1a\u9002\u5408\u6570\u636e\u5206\u6790\u548c\u5bfc\u5165
-- **BibTeX/RIS**\uff1a\u9002\u5408\u53c2\u8003\u6587\u732e\u7ba1\u7406
-- **HTML/XML**\uff1a\u9002\u5408\u7f51\u9875\u5c55\u793a\u548c\u6570\u636e\u4ea4\u6362
+- **自然语言查询**
+- **布尔运算符** (AND, OR, NOT)
+- **字段限定搜索** (title:, author:, year:)
+- **范围搜索** (year:2020-2024, citations:>100)
+- **通配符搜索**
 
-### \u26a1 \u6027\u80fd\u4f18\u5316
-- **\u591a\u7ea7\u7f13\u5b58**\uff1a\u5185\u5b58\u3001\u78c1\u76d8\u3001\u5206\u5e03\u5f0f\u7f13\u5b58
-- **\u667a\u80fd\u91cd\u8bd5**\uff1a\u81ea\u52a8\u5904\u7406\u901f\u7387\u9650\u5236\u548c\u7f51\u7edc\u9519\u8bef
-- **\u6e10\u8fdb\u5f0f\u52a0\u8f7d**\uff1a\u5feb\u901f\u8fd4\u56de\u7b2c\u4e00\u6279\u7ed3\u679c
-- **\u8bf7\u6c42\u5408\u5e76**\uff1a\u51cf\u5c11API\u8c03\u7528\u6b21\u6570
+### 🎯 精准的结果处理
 
-## \u652f\u6301\u7684\u6570\u636e\u5e93
+- **智能去重**：基于DOI、标题、作者等多维度去重
+- **多维度排序**：引用数、年份、相关性、影响力、趋势
+- **高级过滤**：（期刊、开放获取、文献类型）
+- **结果丰富**：自动补充元数据、计算影响力指标
+- **质量评分**：综合评分系统，提供最佳结果
 
-| \u6570\u636e\u5e93 | \u6570\u636e\u91cf | \u4f18\u52bf\u9886\u57df | \u901f\u7387\u9650\u5236 |
+### 💬 丰富的输出格式
+
+- **Markdown**：适合阅读和笔记
+- **JSON**：适合程序处理
+- **CSV/Excel**：适合数据分析和导入
+- **BibTeX/RIS**：适合参考文献管理
+- **HTML/XML**：适合网页展示和数据交换
+
+### ⚡ 性能优化
+
+- **多级缓存**：内存、磁盘、分布式缓存
+- **智能重试**：自动处理速率限制和网络错误
+- **渐进式加载**：快速返回第一批结果
+- **请求合并**：减少API调用次数
+
+## 支持的数据库
+
+| 数据库 | 数据量 | 优势领域 | 速率限制 |
 |--------|--------|----------|----------|
-| Semantic Scholar | 2.33\u4ebf+ | AI\u3001\u8ba1\u7b97\u673a\u79d1\u5b66\u3001\u591a\u5b66\u79d1 | 1000\u8bf7\u6c42/\u79d2\uff08\u65e0\u8ba4\u8bc1\uff09 |
-| Crossref | 1.4\u4ebf+ | \u671f\u520a\u6587\u7ae0\u3001\u5b98\u65b9DOI | \u65e0\u9650\u5236\uff08\u793c\u8c8c\u4f7f\u7528\uff09 |
-| arXiv | 220\u4e07+ | \u9884\u5370\u672c\u3001\u8ba1\u7b97\u673a\u3001\u7269\u7406\u3001\u6570\u5b66 | \u65e0\u9650\u5236\uff08\u793c\u8c8c\u4f7f\u7528\uff09 |
-| PubMed | 3500\u4e07+ | \u751f\u7269\u533b\u5b66\u3001\u751f\u547d\u79d1\u5b66 | 10\u8bf7\u6c42/\u79d2 |
+| Semantic Scholar | 2.33亿+ | AI、计算机科学、多学科 | 100请求/5分钟（无认证） |
+| Crossref | 1.4亿+ | 期刊文章、官方DOI | 无限制（礼貌使用） |
+| arXiv | 220万+ | 预印本、计算机、物理、数学 | 无限制 |
+| PubMed | 3500万+ | 生物医学、生命科学 | 10请求/秒 |
 
-## \u4f7f\u7528\u793a\u4f8b
+## 使用示例
 
-### \u57fa\u672c\u68c0\u7d22
-openclaw literature-search "deep learning in medical imaging"
+### 基本检索
 
-### \u9ad8\u7ea7\u68c0\u7d22
-openclaw literature-search \\
+```python
+from agent import AcademicLiteratureSearchSkill
+import asyncio
 
---query "attention mechanism AND transformer" \\
+async def main():
+    skill = AcademicLiteratureSearchSkill()
+    
+    params = {
+        "query": "deep learning in medical imaging",
+        "databases": ["semantic_scholar"],
+        "max_results": 10
+    }
+    
+    result = await skill.execute(params)
+    print(result["results"])
 
---databases semantic_scholar crossref \\
+asyncio.run(main())
+```
 
---year-range 2020-2024 \\
+### 高级检索
 
---max-results 100 \\
+```python
+params = {
+    "query": "attention mechanism AND transformer",
+    "databases": ["semantic_scholar", "crossref"],
+    "year_range": "2020-2024",
+    "max_results": 100,
+    "sort_by": "citations",
+    "min_citations": 50,
+    "open_access_only": True,
+    "output_format": "markdown"
+}
+```
 
---sort-by citations \\
+### 作为库使用
 
---sort-order desc \\
+```python
+from agent import LiteratureSearchEngine
 
---min-citations 50 \\
+async def search():
+    async with LiteratureSearchEngine() as engine:
+        papers = await engine.search(
+            query="reinforcement learning",
+            databases=["semantic_scholar", "arxiv"],
+            max_results=20
+        )
+        for paper in papers:
+            print(f"{paper.title} - {paper.citation_count} citations")
+```
 
---open-access-only \\
+## 参数说明
 
---output-format markdown \\
+### 查询参数
 
---output-file results.md
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| query | string | 必需 | 检索查询字符串 |
+| databases | array | ["semantic_scholar", "crossref"] | 使用的数据库列表 |
+| max_results | integer | 50 | 最大返回数量 (1-1000) |
+| year_range | string | - | 年份范围，如 "2020-2024" |
+| sort_by | string | "relevance" | 排序方式 |
+| sort_order | string | "desc" | 排序顺序 (asc/desc) |
+| open_access_only | boolean | false | 仅开放获取文献 |
+| min_citations | integer | - | 最小引用数 |
+| venue_filter | array | - | 期刊/会议过滤 |
 
-### \u4f5c\u8005\u68c0\u7d22
-openclaw literature-search \\
+### 输出参数
 
---query "author:"Andrew Ng"" \\
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| output_format | string | "markdown" | 输出格式 |
+| output_file | string | - | 输出文件路径 |
+| interactive | boolean | false | 交互式模式 |
+| verbose | boolean | false | 详细输出 |
+| cache | boolean | true | 启用缓存 |
+| save_results | boolean | false | 保存结果到文件 |
 
---databases semantic_scholar \\
+## 配置说明
 
---max-results 50
+### 环境变量
 
+```bash
+# API 密钥（可选但推荐）
+SEMANTIC_SCHOLAR_API_KEY="your_email@example.com"
+CROSSREF_API_EMAIL="your_email@example.com"
+PUBMED_API_KEY="your_api_key"
 
-## \u53c2\u6570\u8bf4\u660e
+# 网络配置
+HTTP_PROXY="http://proxy.example.com:8080"
+HTTPS_PROXY="http://proxy.example.com:8080"
 
-### \u67e5\u8be2\u53c2\u6570
-- `query` (\u5fc5\u9700): \u68c0\u7d22\u67e5\u8be2\u5b57\u7b26\u4e32
-- `databases`: \u4f7f\u7528\u7684\u6570\u636e\u5e93\u5217\u8868\uff0c\u9ed8\u8ba4 ["semantic_scholar", "crossref"]
-- `max_results`: \u6700\u5927\u8fd4\u56de\u6570\u91cf\uff0c\u9ed8\u8ba4 50
-- `year_range`: \u5e74\u4efd\u8303\u56f4\uff0c\u5982 "2020-2024"
-- `sort_by`: \u6392\u5e8f\u65b9\u5f0f (relevance, citations, year, influential)
-- `sort_order`: \u6392\u5e8f\u987a\u5e8f (asc, desc)
-- `open_access_only`: \u4ec5\u5f00\u653e\u83b7\u53d6\u6587\u732e
-- `min_citations`: \u6700\u5c0f\u5f15\u7528\u6570
-- `venue_filter`: \u671f\u520a/\u4f1a\u8bae\u8fc7\u6ee4
+# 缓存配置
+LITERATURE_SEARCH_CACHE_ENABLED=true
+LITERATURE_SEARCH_CACHE_DIR="~/.cache/openclaw/literature"
 
-### \u8f93\u51fa\u53c2\u6570
-- `output_format`: \u8f93\u51fa\u683c\u5f0f
-- `output_file`: \u8f93\u51fa\u6587\u4ef6\u8def\u5f84
-- `interactive`: \u4ea4\u4e92\u5f0f\u6a21\u5f0f
-- `verbose`: \u8be6\u7ec6\u8f93\u51fa
+# 日志配置
+LITERATURE_SEARCH_LOG_LEVEL=INFO
+```
 
-## \u914d\u7f6e\u8bf4\u660e
+### 配置文件
 
-### \u73af\u5883\u53d8\u91cf
-Semantic Scholar API\u5bc6\u94a5\uff08\u63a8\u8350\uff09
+复制 `config.example.yaml` 为 `config.yaml` 并修改配置。
 
-export SEMANTIC_SCHOLAR_API_KEY="your_email@example.com"
+## 错误处理
 
-Crossref API\u90ae\u7bb1\uff08\u793c\u8c8c\u4f7f\u7528\uff09
+- **网络错误**：自动重试，提供降级方案
+- **API限制**：智能退避，多API密钥轮换
+- **无效查询**：提供修正建议
+- **无结果**：提供扩展搜索建议
 
-export CROSSREF_API_EMAIL="your_email@example.com"
+## 许可证
 
-PubMed API\u5bc6\u94a5\uff08\u53ef\u9009\uff09
-
-export PUBMED_API_KEY="your_api_key"
-### \u914d\u7f6e\u6587\u4ef6
-\u590d\u5236 `config.example.yaml` \u4e3a `config.yaml` \u5e76\u4fee\u6539\u914d\u7f6e\u3002
-
-## \u9519\u8bef\u5904\u7406
-- \u7f51\u7edc\u9519\u8bef\uff1a\u81ea\u52a8\u91cd\u8bd5\uff0c\u63d0\u4f9b\u964d\u7ea7\u65b9\u6848
-- API\u9650\u5236\uff1a\u667a\u80fd\u9000\u907f\uff0c\u591aAPI\u5bc6\u94a5\u8f6e\u6362
-- \u65e0\u6548\u67e5\u8be2\uff1a\u63d0\u4f9b\u4fee\u6b63\u5efa\u8bae
-- \u65e0\u7ed3\u679c\uff1a\u63d0\u4f9b\u6269\u5c55\u641c\u7d22\u5efa\u8bae
-
-## \u6027\u80fd\u4f18\u5316
-- \u591a\u7ea7\u7f13\u5b58\uff08\u5185\u5b58\u3001\u78c1\u76d8\u3001\u5171\u4eab\uff09
-- \u5e76\u53d1\u68c0\u7d22
-- \u667a\u80fd\u8bf7\u6c42\u8c03\u5ea6
-- \u589e\u91cf\u7ed3\u679c\u8fd4\u56de
-
-## \u8bb8\u53ef\u8bc1
 MIT License
