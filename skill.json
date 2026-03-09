@@ -1,6 +1,6 @@
 {
   "name": "academic-literature-search",
-  "version": "0.1.2",
+  "version": "2.0.0",
   "author": "jibeilindong",
   "author_url": "https://github.com/jibeilindong",
   "description": "专业的学术文献检索工具，集成 Semantic Scholar、Crossref、PubMed、arXiv 等多个学术数据库",
@@ -174,16 +174,15 @@
   },
   "requires": {
     "env": {
-      "SEMANTIC_SCHOLAR_API_KEY": "可选，Semantic Scholar API 密钥",
-      "CROSSREF_API_EMAIL": "可选，推荐提供以提高请求限制",
-      "PUBMED_API_KEY": "可选，PubMed API 密钥"
+      "SEMANTIC_SCHOLAR_API_KEY": "可选，Semantic Scholar API 密钥，不设置使用默认",
+      "CROSSREF_API_EMAIL": "可选，推荐设置以礼貌使用",
+      "PUBMED_API_KEY": "可选，PubMed API 密钥，不设置使用默认"
     },
-    "bins": ["python3"],
     "pips": ["requests", "aiohttp", "pandas", "pyyaml", "aiofiles"]
   },
   "permissions": [
-    "网络访问权限",
-    "文件读写权限"
+    "网络访问权限：向第三方学术数据库发送检索请求",
+    "文件读写权限：创建缓存目录和保存结果文件"
   ],
   "platforms": ["linux", "macos", "windows"],
   "tags": ["academic", "research", "literature", "papers", "search"],
