@@ -10,6 +10,7 @@ import json
 import asyncio
 import aiohttp
 import yaml
+import xml.etree.ElementTree as ET
 from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass, asdict, field
 from datetime import datetime, timedelta
@@ -56,10 +57,11 @@ class Paper:
     source_database: Database = Database.SEMANTIC_SCHOLAR
     
     def to_dict(self) -> Dict:
-    data = asdict(self)
-    data['source_database'] = self.source_database.value  # 转换为字符串
-    return data
-
+        """转换为字典"""
+        data = asdict(self)
+        # 将 Database 枚举转换为字符串
+        data['source_database'] = self.source_database.value
+        return data
 
 class LiteratureSearchEngine:
     """文献检索引擎核心"""
@@ -198,18 +200,18 @@ class LiteratureSearchEngine:
     
     async def _search_pubmed(self, query: str, max_results: int,
                            year_range: Tuple[int, int] = None) -> List[Paper]:
-        """PubMed检索（简化版）"""
+        """PubMed检索"""
         # 构建PubMed查询
         pubmed_query = query
         if year_range:
             pubmed_query += f" AND ({year_range[0]}[Date - Publication] : {year_range[1]}[Date - Publication])"
         
+        # 第一步：获取 ID 列表
         params = {
             "db": "pubmed",
             "term": pubmed_query,
             "retmax": min(max_results, 100),
             "retmode": "json",
-            "api_key": self.api_config['pubmed']['api_key'] if self.api_config['pubmed']['api_key'] else ""
         }
         
         try:
@@ -221,24 +223,88 @@ class LiteratureSearchEngine:
                     data = await response.json()
                     id_list = data.get("esearchresult", {}).get("idlist", [])
                     
-                    if id_list:
-                        # 这里简化处理，实际需要获取详细信息
-                        return [Paper(
-                            title=f"PubMed Result {i}",
-                            authors=[],
-                            abstract="",
-                            year=year_range[0] if year_range else None,
-                            pmid=pmid,
-                            source_database=Database.PUBMED
-                        ) for i, pmid in enumerate(id_list[:max_results])]
+                    if not id_list:
+                        return []
+                    
+                    # 第二步：获取详细信息
+                    id_str = ",".join(id_list[:max_results])
+                    fetch_params = {
+                        "db": "pubmed",
+                        "id": id_str,
+                        "retmode": "xml",
+                        "rettype": "abstract"
+                    }
+                    
+                    async with self.session.get(
+                        f"{self.api_config['pubmed']['base_url']}/efetch.fcgi",
+                        params=fetch_params
+                    ) as fetch_response:
+                        if fetch_response.status == 200:
+                            xml_data = await fetch_response.text()
+                            return self._process_pubmed_results(xml_data)
         except Exception as e:
             logger.error(f"PubMed检索失败: {e}")
         
         return []
     
+    def _process_pubmed_results(self, xml_data: str) -> List[Paper]:
+        """解析 PubMed XML 结果"""
+        papers = []
+        try:
+            root = ET.fromstring(xml_data)
+            
+            for article in root.findall('.//PubmedArticle'):
+                # 提取标题
+                title_elem = article.find('.//ArticleTitle')
+                title = title_elem.text if title_elem is not None else ""
+                
+                # 提取作者
+                authors = []
+                for author in article.findall('.//Author'):
+                    last_name = author.find('LastName')
+                    fore_name = author.find('ForeName')
+                    if last_name is not None:
+                        name = f"{fore_name.text} {last_name.text}" if fore_name is not None else last_name.text
+                        authors.append(name.strip())
+                
+                # 提取年份
+                year = None
+                pub_date = article.find('.//PubDate')
+                if pub_date is not None:
+                    year_elem = pub_date.find('Year')
+                    if year_elem is not None and year_elem.text:
+                        year = int(year_elem.text)
+                
+                # 提取期刊
+                journal = article.find('.//Journal/Title')
+                venue = journal.text if journal is not None else ""
+                
+                # 提取摘要
+                abstract = ""
+                for abs_elem in article.findall('.//AbstractText'):
+                    if abs_elem.text:
+                        abstract += abs_elem.text + " "
+                
+                pmid_elem = article.find('.//PMID')
+                pmid = pmid_elem.text if pmid_elem is not None else ""
+                
+                papers.append(Paper(
+                    title=title,
+                    authors=authors,
+                    abstract=abstract.strip() if abstract else None,
+                    year=year,
+                    venue=venue,
+                    pmid=pmid,
+                    source_database=Database.PUBMED
+                ))
+        except Exception as e:
+            logger.error(f"解析 PubMed 结果失败: {e}")
+        
+        return papers
+    
     async def _search_arxiv(self, query: str, max_results: int,
                            year_range: Tuple[int, int] = None) -> List[Paper]:
-        """arXiv检索（简化版）"""
+        """arXiv检索"""
         params = {
             "search_query": f"all:{query}",
             "max_results": min(max_results, 100),
@@ -253,19 +319,74 @@ class LiteratureSearchEngine:
             ) as response:
                 if response.status == 200:
                     xml_data = await response.text()
-                    # 这里简化处理，实际需要解析XML
-                    return [Paper(
-                        title=f"arXiv Result {i}",
-                        authors=[],
-                        abstract="",
-                        year=year_range[0] if year_range else None,
-                        arxiv_id=f"1234.5678v{i}",
-                        source_database=Database.ARXIV
-                    ) for i in range(min(10, max_results))]
+                    return self._process_arxiv_results(xml_data)
         except Exception as e:
             logger.error(f"arXiv检索失败: {e}")
         
         return []
+    
+    def _process_arxiv_results(self, xml_data: str) -> List[Paper]:
+        """解析 arXiv XML 结果"""
+        papers = []
+        try:
+            root = ET.fromstring(xml_data)
+            
+            # arXiv 使用命名空间
+            ns = {'atom': 'http://www.w3.org/2005/Atom'}
+            
+            for entry in root.findall('atom:entry', ns):
+                # 提取标题
+                title = entry.find('atom:title', ns)
+                title_text = title.text.strip() if title is not None and title.text else ""
+                
+                # 提取摘要
+                summary = entry.find('atom:summary', ns)
+                abstract = summary.text.strip() if summary is not None and summary.text else ""
+                
+                # 提取作者
+                authors = []
+                for author in entry.findall('atom:author', ns):
+                    name = author.find('atom:name', ns)
+                    if name is not None and name.text:
+                        authors.append(name.text)
+                
+                # 提取日期
+                year = None
+                updated = entry.find('atom:updated', ns)
+                if updated is not None and updated.text:
+                    year = int(updated.text[:4])
+                
+                # 提取 arXiv ID
+                arxiv_id = None
+                id_elem = entry.find('atom:id', ns)
+                if id_elem is not None and id_elem.text:
+                    # 从 URL 提取 ID: http://arxiv.org/abs/2306.04338v1 -> 2306.04338
+                    arxiv_id = id_elem.text.split('/')[-1]
+                    if 'v' in arxiv_id:
+                        arxiv_id = arxiv_id.split('v')[0]
+                
+                # 提取 PDF 链接
+                pdf_link = None
+                for link in entry.findall('atom:link', ns):
+                    if link.get('title') == 'pdf':
+                        pdf_link = link.get('href')
+                        break
+                
+                papers.append(Paper(
+                    title=title_text,
+                    authors=authors,
+                    abstract=abstract,
+                    year=year,
+                    arxiv_id=arxiv_id,
+                    url=f"https://arxiv.org/abs/{arxiv_id}" if arxiv_id else None,
+                    open_access_pdf=pdf_link,
+                    is_open_access=True,
+                    source_database=Database.ARXIV
+                ))
+        except Exception as e:
+            logger.error(f"解析 arXiv 结果失败: {e}")
+        
+        return papers
     
     def _process_semantic_scholar_results(self, results: List[Dict]) -> List[Paper]:
         """处理Semantic Scholar结果"""
@@ -476,6 +597,8 @@ class OutputFormatter:
             # 生成BibTeX键
             if paper.doi:
                 key = paper.doi.replace("/", "_").replace(".", "_")
+            elif paper.arxiv_id:
+                key = f"arxiv_{paper.arxiv_id}"
             elif paper.authors and paper.year:
                 first_author = paper.authors[0].split()[-1] if paper.authors[0] else "unknown"
                 key = f"{first_author.lower()}_{paper.year}"
@@ -484,7 +607,9 @@ class OutputFormatter:
             
             # 确定文献类型
             entry_type = "article"
-            if paper.venue and any(conf in paper.venue.lower() for conf in ["conference", "proceedings", "workshop"]):
+            if paper.arxiv_id:
+                entry_type = "misc"
+            elif paper.venue and any(conf in paper.venue.lower() for conf in ["conference", "proceedings", "workshop"]):
                 entry_type = "inproceedings"
             
             # 构建BibTeX条目
@@ -506,6 +631,9 @@ class OutputFormatter:
                     fields.append(f"  booktitle = {{{paper.venue}}},")
             if paper.doi:
                 fields.append(f"  doi = {{{paper.doi}}},")
+            if paper.arxiv_id:
+                fields.append(f"  eprint = {{{paper.arxiv_id}}},")
+                fields.append(f"  archivePrefix = {{arXiv}},")
             if paper.url:
                 fields.append(f"  url = {{{paper.url}}},")
             if paper.abstract:
