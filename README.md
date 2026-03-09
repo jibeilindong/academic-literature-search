@@ -1,71 +1,72 @@
-# \u5b66\u672f\u6587\u732e\u68c0\u7d22\u6280\u80fd
+# 学术文献检索技能
 
-\u4e00\u4e2a\u4e13\u6ce8\u4e8e\u6587\u732e\u68c0\u7d22\u7684OpenClaw\u6280\u80fd\uff0c\u63d0\u4f9b\u5feb\u901f\u3001\u51c6\u786e\u3001\u5168\u9762\u7684\u5b66\u672f\u6587\u732e\u68c0\u7d22\u670d\u52a1\u3002
+一个专注于文献检索的OpenClaw技能，提供快速、准确、全面的学术文献检索服务。
 
-## \u529f\u80fd\u7279\u6027
+## 功能特性
 
-- **\u591a\u6570\u636e\u5e93\u96c6\u6210**: Semantic Scholar, Crossref, PubMed, arXiv
-- **\u9ad8\u7ea7\u68c0\u7d22**: \u5e03\u5c14\u641c\u7d22\u3001\u5b57\u6bb5\u9650\u5b9a\u3001\u8303\u56f4\u641c\u7d22
-- **\u667a\u80fd\u5904\u7406**: \u53bb\u91cd\u3001\u6392\u5e8f\u3001\u8fc7\u6ee4\u3001\u7ed3\u679c\u4e30\u5bcc
-- **\u591a\u683c\u5f0f\u8f93\u51fa**: Markdown, JSON, CSV, BibTeX, RIS, Excel
-- **\u6027\u80fd\u4f18\u5316**: \u5e76\u53d1\u68c0\u7d22\u3001\u667a\u80fd\u7f13\u5b58\u3001\u6e10\u8fdb\u5f0f\u52a0\u8f7d
+- **多数据库集成**: Semantic Scholar, Crossref, PubMed, arXiv
+- **高级检索**: 布尔搜索、字段限定、范围搜索
+- **智能处理**: 去重、排序、过滤、结果丰富
+- **多格式输出**: Markdown, JSON, CSV, BibTeX, RIS, Excel
+- **性能优化**: 并发检索、智能缓存、渐进式加载
 
-## \u5b89\u88c5
+## 安装
 
-### \u65b9\u6cd5\u4e00\uff1a\u901a\u8fc7OpenClaw\u5b89\u88c5
+### 方法一：通过OpenClaw安装
+ bash 
 openclaw skill install academic-literature-search
 
-### \u65b9\u6cd5\u4e8c\uff1a\u624b\u52a8\u5b89\u88c5
-1. \u514b\u9686\u4ed3\u5e93\uff1a
+### 方法二：手动安装
+1. 克隆仓库：
 git clone https://github.com/openclaw/skills/academic-literature-search.git
 
-2. \u5b89\u88c5\u4f9d\u8d56\uff1a
+2. 安装依赖：
 cd academic-literature-search
 
 pip install -r requirements.txt
-
-3. \u914d\u7f6e\u73af\u5883\u53d8\u91cf\uff1a
-Semantic Scholar API\u5bc6\u94a5\uff08\u53ef\u9009\u4f46\u63a8\u8350\uff09
+bash
+3. 配置环境变量：
+Semantic Scholar API密钥（可选但推荐）
 
 export SEMANTIC_SCHOLAR_API_KEY="your_email@example.com"
 
-Crossref API\u90ae\u7bb1\uff08\u63a8\u8350\uff09
+Crossref API邮箱（推荐）
 
 export CROSSREF_API_EMAIL="your_email@example.com"
 
-PubMed API\u5bc6\u94a5\uff08\u53ef\u9009\uff09
+PubMed API密钥（可选）
 
 export PUBMED_API_KEY="your_api_key"
 
-4. \u590d\u5236\u914d\u7f6e\u6587\u4ef6\uff1a
+4. 复制配置文件：
 cp config.example.yaml config.yaml
-\u7f16\u8f91 config.yaml \u914d\u7f6e
+编辑 config.yaml 配置
 
-## \u4f7f\u7528\u65b9\u6cd5
+## 使用方法
 
-### \u57fa\u672c\u7528\u6cd5
+### 基本用法
 
-\u7b80\u5355\u68c0\u7d22
+简单检索
 
 openclaw literature-search "deep learning in medical imaging"
 
-\u9ad8\u7ea7\u68c0\u7d22
+高级检索
 
-openclaw literature-search \\
+openclaw literature-search \
 
---query "attention mechanism AND transformer" \\
+--query "attention mechanism AND transformer" \
 
---databases semantic_scholar crossref \\
+--databases semantic_scholar crossref \
 
---year-range 2020-2024 \\
+--year-range 2020-2024 \
 
---max-results 100 \\
+--max-results 100 \
 
---sort-by citations \\
+--sort-by citations \
 
---open-access-only \\
+--open-access-only \
 
---output-format markdown \\
+--output-format markdown \
 
 --output-file results.md
 ### Python API
@@ -73,11 +74,11 @@ openclaw literature-search \\
 
 from literature_search import AcademicLiteratureSearchSkill
 
-\u521d\u59cb\u5316\u6280\u80fd
+初始化技能
 
 skill = AcademicLiteratureSearchSkill()
 
-\u6267\u884c\u68c0\u7d22
+执行检索
 
 params = {
 
@@ -96,7 +97,7 @@ result = await skill.execute(params)
 print(result["results"])
 
 
-### \u4f5c\u4e3a\u5e93\u4f7f\u7528
+### 作为库使用
 
 import asyncio
 
@@ -122,76 +123,76 @@ print(f"{paper.title} - {paper.citation_count} citations")
 
 asyncio.run(search())
 
-## \u53c2\u6570\u8bf4\u660e
+## 参数说明
 
-| \u53c2\u6570 | \u7c7b\u578b | \u9ed8\u8ba4\u503c | \u8bf4\u660e |
+| 参数 | 类型 | 默认值 | 说明 |
 |------|------|--------|------|
-| query | string | \u5fc5\u9700 | \u68c0\u7d22\u67e5\u8be2\u5b57\u7b26\u4e32 |
-| databases | array | ["semantic_scholar", "crossref"] | \u4f7f\u7528\u7684\u6570\u636e\u5e93 |
-| max_results | integer | 50 | \u6700\u5927\u8fd4\u56de\u6570\u91cf |
-| year_range | string | - | \u5e74\u4efd\u8303\u56f4\uff0c\u5982 "2020-2024" |
-| sort_by | string | "relevance" | \u6392\u5e8f\u65b9\u5f0f |
-| sort_order | string | "desc" | \u6392\u5e8f\u987a\u5e8f |
-| open_access_only | boolean | false | \u4ec5\u5f00\u653e\u83b7\u53d6 |
-| min_citations | integer | - | \u6700\u5c0f\u5f15\u7528\u6570 |
-| output_format | string | "markdown" | \u8f93\u51fa\u683c\u5f0f |
-| output_file | string | - | \u8f93\u51fa\u6587\u4ef6\u8def\u5f84 |
-| interactive | boolean | false | \u4ea4\u4e92\u5f0f\u6a21\u5f0f |
-| cache | boolean | true | \u542f\u7528\u7f13\u5b58 |
+| query | string | 必需 | 检索查询字符串 |
+| databases | array | ["semantic_scholar", "crossref"] | 使用的数据库 |
+| max_results | integer | 50 | 最大返回数量 |
+| year_range | string | - | 年份范围，如 "2020-2024" |
+| sort_by | string | "relevance" | 排序方式 |
+| sort_order | string | "desc" | 排序顺序 |
+| open_access_only | boolean | false | 仅开放获取 |
+| min_citations | integer | - | 最小引用数 |
+| output_format | string | "markdown" | 输出格式 |
+| output_file | string | - | 输出文件路径 |
+| interactive | boolean | false | 交互式模式 |
+| cache | boolean | true | 启用缓存 |
 
-## \u8f93\u51fa\u683c\u5f0f
+## 输出格式
 
-### Markdown\u793a\u4f8b
+### Markdown示例
 
-\u6587\u732e\u68c0\u7d22\u7ed3\u679c
+文献检索结果
 
-\u68c0\u7d22\u8bcd: deep learning in medical imaging
+检索词: deep learning in medical imaging
 
-\u68c0\u7d22\u65f6\u95f4: 2024-01-15 14:30:00
+检索时间: 2024-01-15 14:30:00
 
-\u7ed3\u679c\u6570\u91cf: 20\u7bc7
+结果数量: 20篇
 
-\u68c0\u7d22\u7ed3\u679c
+检索结果
 
 1. Deep Learning for Medical Image Analysis: A Comprehensive Review
-\u4f5c\u8005: Geert Litjens, Thijs Kooi, Babak Ehteshami Bejnordi, et al.
-\u51fa\u7248\u4fe1\u606f: 2017\u5e74 | Medical Image Analysis
-\u5f15\u7528\u6570: 4231
-\u6807\u8bc6\u7b26: DOI: 10.1016/j.media.2017.07.005
-\u6458\u8981: Deep learning has emerged as a powerful tool...
-\u8bbf\u95ee: \u539f\u6587\u94fe\u63a5| \ud83d\udd13 \u5f00\u653e\u83b7\u53d6
+作者: Geert Litjens, Thijs Kooi, Babak Ehteshami Bejnordi, et al.
+出版信息: 2017年 | Medical Image Analysis
+引用数: 4231
+标识符: DOI: 10.1016/j.media.2017.07.005
+摘要: Deep learning has emerged as a powerful tool...
+访问: 原文链接| 🔓 开放获取
 
-## \u9ad8\u7ea7\u529f\u80fd
+## 高级功能
 
-### 1. \u7f13\u5b58\u7cfb\u7edf
-\u6280\u80fd\u4f7f\u7528\u591a\u7ea7\u7f13\u5b58\u7cfb\u7edf\uff1a
-- \u5185\u5b58\u7f13\u5b58\uff1a5\u5206\u949fTTL
-- \u78c1\u76d8\u7f13\u5b58\uff1a1\u5c0f\u65f6TTL
-- \u667a\u80fd\u7f13\u5b58\u952e\u751f\u6210
+### 1. 缓存系统
+技能使用多级缓存系统：
+- 内存缓存：5分钟TTL
+- 磁盘缓存：1小时TTL
+- 智能缓存键生成
 
-### 2. \u5e76\u53d1\u68c0\u7d22
-- \u5e76\u884c\u67e5\u8be2\u591a\u4e2a\u6570\u636e\u5e93
-- \u667a\u80fd\u8bf7\u6c42\u8c03\u5ea6
-- \u901f\u7387\u9650\u5236\u5904\u7406
+### 2. 并发检索
+- 并行查询多个数据库
+- 智能请求调度
+- 速率限制处理
 
-### 3. \u9519\u8bef\u5904\u7406
-- \u81ea\u52a8\u91cd\u8bd5\u673a\u5236
-- \u4f18\u96c5\u964d\u7ea7
-- \u8be6\u7ec6\u7684\u9519\u8bef\u4fe1\u606f
+### 3. 错误处理
+- 自动重试机制
+- 优雅降级
+- 详细的错误信息
 
 
-### 4. \u6027\u80fd\u76d1\u63a7
-- \u8bf7\u6c42\u8ddf\u8e2a
-- \u54cd\u5e94\u65f6\u95f4\u7edf\u8ba1
-- \u7f13\u5b58\u547d\u4e2d\u7387
+### 4. 性能监控
+- 请求跟踪
+- 响应时间统计
+- 缓存命中率
 
-## \u914d\u7f6e
+## 配置
 
-### \u73af\u5883\u53d8\u91cf
+### 环境变量
 
 bash
 
-API\u5bc6\u94a5
+API密钥
 
 SEMANTIC_SCHOLAR_API_KEY
 
@@ -199,7 +200,7 @@ CROSSREF_API_EMAIL
 
 PUBMED_API_KEY
 
-\u7f51\u7edc\u914d\u7f6e
+网络配置
 
 HTTP_PROXY
 
@@ -207,14 +208,14 @@ HTTPS_PROXY
 
 LITERATURE_SEARCH_TIMEOUT
 
-\u7f13\u5b58\u914d\u7f6e
+缓存配置
 
 LITERATURE_SEARCH_CACHE_ENABLED
 
 LITERATURE_SEARCH_CACHE_DIR
-\u590d\u5236
-### \u914d\u7f6e\u6587\u4ef6
-\u7f16\u8f91 `config.yaml`\uff1a
+复制
+### 配置文件
+编辑 `config.yaml`：
 yaml
 
 search:
@@ -227,122 +228,122 @@ cache:
 
 enabled: true
 
-memory_cache_ttl: 600  # 10\u5206\u949f
+memory_cache_ttl: 600  # 10分钟
 
 output:
 
 default_format: "json"
 
 auto_save: true
-\u590d\u5236
-## \u6545\u969c\u6392\u9664
+复制
+## 故障排除
 
-### \u5e38\u89c1\u95ee\u9898
+### 常见问题
 
-1. **API\u901f\u7387\u9650\u5236**
-   - \u7533\u8bf7Semantic Scholar API\u5bc6\u94a5
-   - \u63d0\u4f9bCrossref\u90ae\u7bb1
-   - \u542f\u7528\u7f13\u5b58\u51cf\u5c11\u8bf7\u6c42
+1. **API速率限制**
+   - 申请Semantic Scholar API密钥
+   - 提供Crossref邮箱
+   - 启用缓存减少请求
 
-2. **\u7f51\u7edc\u95ee\u9898**
-   - \u68c0\u67e5\u7f51\u7edc\u8fde\u63a5
-   - \u914d\u7f6e\u4ee3\u7406\u670d\u52a1\u5668
-   - \u589e\u52a0\u8d85\u65f6\u65f6\u95f4
+2. **网络问题**
+   - 检查网络连接
+   - 配置代理服务器
+   - 增加超时时间
 
-3. **\u65e0\u7ed3\u679c**
-   - \u68c0\u67e5\u67e5\u8be2\u8bed\u6cd5
-   - \u5c1d\u8bd5\u82f1\u6587\u5173\u952e\u8bcd
-   - \u6269\u5927\u68c0\u7d22\u8303\u56f4
+3. **无结果**
+   - 检查查询语法
+   - 尝试英文关键词
+   - 扩大检索范围
 
-### \u8c03\u8bd5\u6a21\u5f0f
+### 调试模式
 bash
 
 export LITERATURE_SEARCH_LOG_LEVEL=DEBUG
 
 openclaw literature-search "test query" --verbose
-\u590d\u5236
-## \u5f00\u53d1
+复制
+## 开发
 
-### \u9879\u76ee\u7ed3\u6784
+### 项目结构
 academic-literature-search/
 
-\u251c\u2500\u2500 SKILL.md          # \u6280\u80fd\u63cf\u8ff0
+├── SKILL.md          # 技能描述
 
-\u251c\u2500\u2500 agent.py          # \u4e3b\u6267\u884c\u903b\u8f91
+├── agent.py          # 主执行逻辑
 
-\u251c\u2500\u2500 skill.json        # \u6280\u80fd\u5143\u4fe1\u606f
+├── skill.json        # 技能元信息
 
-\u251c\u2500\u2500 requirements.txt  # Python\u4f9d\u8d56
+├── requirements.txt  # Python依赖
 
-\u251c\u2500\u2500 config.example.yaml  # \u914d\u7f6e\u793a\u4f8b
+├── config.example.yaml  # 配置示例
 
-\u251c\u2500\u2500 tests/            # \u6d4b\u8bd5\u6587\u4ef6
+├── tests/            # 测试文件
 
-\u2514\u2500\u2500 README.md         # \u4f7f\u7528\u8bf4\u660e
-\u590d\u5236
-### \u8fd0\u884c\u6d4b\u8bd5
+└── README.md         # 使用说明
+复制
+### 运行测试
 bash
 
-\u5b89\u88c5\u6d4b\u8bd5\u4f9d\u8d56
+安装测试依赖
 
 pip install pytest pytest-asyncio
 
-\u8fd0\u884c\u6d4b\u8bd5
+运行测试
 
 pytest tests/
-\u590d\u5236
-### \u8d21\u732e\u6307\u5357
-1. Fork\u4ed3\u5e93
-2. \u521b\u5efa\u7279\u6027\u5206\u652f
-3. \u63d0\u4ea4\u66f4\u6539
-4. \u63a8\u9001\u5206\u652f
-5. \u521b\u5efaPull Request
+复制
+### 贡献指南
+1. Fork仓库
+2. 创建特性分支
+3. 提交更改
+4. 推送分支
+5. 创建Pull Request
 
-## \u8bb8\u53ef\u8bc1
+## 许可证
 MIT License
 
-## \u652f\u6301
-- \u95ee\u9898\u62a5\u544a: [GitHub Issues](https://github.com/openclaw/skills/issues)
-- \u6587\u6863: [OpenClaw Docs](https://docs.openclaw.dev)
-- \u793e\u533a: [Discord](https://discord.gg/openclaw)
-\u4e09\u3001\u4f7f\u7528\u793a\u4f8b
+## 支持
+- 问题报告: [GitHub Issues](https://github.com/openclaw/skills/issues)
+- 文档: [OpenClaw Docs](https://docs.openclaw.dev)
+- 社区: [Discord](https://discord.gg/openclaw)
+三、使用示例
 
-1. \u547d\u4ee4\u884c\u4f7f\u7528
+1. 命令行使用
 bash
-\u590d\u5236
-# \u57fa\u672c\u68c0\u7d22
+复制
+# 基本检索
 openclaw literature-search "machine learning in healthcare"
 
-# \u5e26\u8fc7\u6ee4\u7684\u68c0\u7d22
-openclaw literature-search \\
-  --query "transformer AND medical" \\
-  --year-range 2020-2024 \\
-  --min-citations 100 \\
+# 带过滤的检索
+openclaw literature-search \
+  --query "transformer AND medical" \
+  --year-range 2020-2024 \
+  --min-citations 100 \
   --open-access-only
 
-# \u5bfc\u51fa\u4e3aJSON
-openclaw literature-search \\
-  --query "reinforcement learning" \\
-  --output-format json \\
+# 导出为JSON
+openclaw literature-search \
+  --query "reinforcement learning" \
+  --output-format json \
   --output-file results.json
 
-# \u4ea4\u4e92\u5f0f\u6a21\u5f0f
-openclaw literature-search \\
-  --query "natural language processing" \\
+# 交互式模式
+openclaw literature-search \
+  --query "natural language processing" \
   --interactive
-2. Python\u811a\u672c\u4f7f\u7528
+2. Python脚本使用
 python
-\u4e0b\u8f7d
-\u590d\u5236
+下载
+复制
 import asyncio
 import json
 from literature_search import AcademicLiteratureSearchSkill
 
 async def main():
-    # \u521d\u59cb\u5316\u6280\u80fd
+    # 初始化技能
     skill = AcademicLiteratureSearchSkill()
     
-    # \u5b9a\u4e49\u68c0\u7d22\u53c2\u6570
+    # 定义检索参数
     params = {
         "query": "large language models in medical diagnosis",
         "databases": ["semantic_scholar", "crossref"],
@@ -353,27 +354,27 @@ async def main():
         "output_format": "markdown"
     }
     
-    # \u6267\u884c\u68c0\u7d22
+    # 执行检索
     result = await skill.execute(params)
     
     if result["success"]:
         print(result["results"])
-        print(f"\\n\u68c0\u7d22\u5230 {result['papers_count']} \u7bc7\u6587\u732e")
+        print(f"\n检索到 {result['papers_count']} 篇文献")
     else:
-        print(f"\u68c0\u7d22\u5931\u8d25: {result['error']}")
+        print(f"检索失败: {result['error']}")
 
-# \u8fd0\u884c
+# 运行
 asyncio.run(main())
-3. \u4f5c\u4e3a\u5e93\u4f7f\u7528
+3. 作为库使用
 python
-\u4e0b\u8f7d
-\u590d\u5236
+下载
+复制
 import asyncio
 from literature_search import LiteratureSearchEngine, OutputFormatter
 
 async def advanced_search():
     async with LiteratureSearchEngine() as engine:
-        # \u5e76\u884c\u68c0\u7d22\u591a\u4e2a\u6570\u636e\u5e93
+        # 并行检索多个数据库
         papers = await engine.search(
             query="(deep learning OR neural network) AND (medical OR healthcare)",
             databases=["semantic_scholar", "crossref", "pubmed"],
@@ -381,35 +382,35 @@ async def advanced_search():
             year_range=(2018, 2024)
         )
         
-        # \u5e94\u7528\u81ea\u5b9a\u4e49\u8fc7\u6ee4
+        # 应用自定义过滤
         filtered_papers = [
             p for p in papers 
             if p.citation_count > 10 and p.is_open_access
         ]
         
-        # \u81ea\u5b9a\u4e49\u6392\u5e8f
+        # 自定义排序
         filtered_papers.sort(key=lambda x: x.citation_count, reverse=True)
         
-        # \u683c\u5f0f\u5316\u8f93\u51fa
+        # 格式化输出
         formatter = OutputFormatter()
         markdown_output = formatter.format_markdown(filtered_papers[:10])
         print(markdown_output)
         
-        # \u5bfc\u51fa\u4e3aBibTeX
+        # 导出为BibTeX
         bibtex_output = formatter.format_bibtex(filtered_papers[:5])
         with open("references.bib", "w") as f:
             f.write(bibtex_output)
 
 asyncio.run(advanced_search())
-\u56db\u3001\u6d4b\u8bd5\u6587\u4ef6
 
+四、测试文件
 tests/test_basic.py
 python
-\u4e0b\u8f7d
-\u590d\u5236
+下载
+复制
 #!/usr/bin/env python3
 """
-\u57fa\u672c\u6d4b\u8bd5
+基本测试
 """
 
 import asyncio
@@ -419,16 +420,16 @@ from literature_search import AcademicLiteratureSearchSkill, Paper, Database
 
 @pytest.mark.asyncio
 async def test_basic_search():
-    """\u6d4b\u8bd5\u57fa\u672c\u68c0\u7d22"""
+    """测试基本检索"""
     skill = AcademicLiteratureSearchSkill()
     
-    # \u6a21\u62df\u53c2\u6570
+    # 模拟参数
     params = {
         "query": "test query",
         "max_results": 5
     }
     
-    # \u6a21\u62df\u5f15\u64ce\u8fd4\u56de
+    # 模拟引擎返回
     with patch('literature_search.LiteratureSearchEngine') as mock_engine:
         mock_instance = Mock()
         mock_instance.search.return_value = [
@@ -451,18 +452,18 @@ async def test_basic_search():
 
 @pytest.mark.asyncio
 async def test_empty_query():
-    """\u6d4b\u8bd5\u7a7a\u67e5\u8be2"""
+    """测试空查询"""
     skill = AcademicLiteratureSearchSkill()
     params = {"query": ""}
     
     result = await skill.execute(params)
     
     assert result["success"] is False
-    assert "\u67e5\u8be2\u53c2\u6570\u4e0d\u80fd\u4e3a\u7a7a" in result["error"]
+    assert "查询参数不能为空" in result["error"]
 
 @pytest.mark.asyncio
 async def test_invalid_database():
-    """\u6d4b\u8bd5\u65e0\u6548\u6570\u636e\u5e93"""
+    """测试无效数据库"""
     skill = AcademicLiteratureSearchSkill()
     params = {
         "query": "test",
@@ -471,11 +472,11 @@ async def test_invalid_database():
     
     result = await skill.execute(params)
     
-    # \u5e94\u8be5\u4f7f\u7528\u9ed8\u8ba4\u6570\u636e\u5e93
+    # 应该使用默认数据库
     assert result["success"] is True
 
 def test_paper_dataclass():
-    """\u6d4b\u8bd5Paper\u6570\u636e\u7c7b"""
+    """测试Paper数据类"""
     paper = Paper(
         title="Test Title",
         authors=["Author 1", "Author 2"],
@@ -488,98 +489,98 @@ def test_paper_dataclass():
     assert paper.year == 2023
     assert paper.citation_count == 100
     
-    # \u6d4b\u8bd5\u8f6c\u6362\u4e3a\u5b57\u5178
+    # 测试转换为字典
     paper_dict = paper.to_dict()
     assert paper_dict["title"] == "Test Title"
     assert "authors" in paper_dict
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
-\u4e94\u3001\u90e8\u7f72\u8bf4\u660e
+五、部署说明
 
-1. \u672c\u5730\u90e8\u7f72
+1. 本地部署
 bash
-\u590d\u5236
-# \u514b\u9686\u4ed3\u5e93
+复制
+# 克隆仓库
 git clone https://github.com/openclaw/skills/academic-literature-search.git
 cd academic-literature-search
 
-# \u5b89\u88c5\u4f9d\u8d56
+# 安装依赖
 pip install -r requirements.txt
 
-# \u914d\u7f6e\u73af\u5883\u53d8\u91cf
+# 配置环境变量
 export SEMANTIC_SCHOLAR_API_KEY="your_email@example.com"
 export CROSSREF_API_EMAIL="your_email@example.com"
 
-# \u6d4b\u8bd5
+# 测试
 python -m pytest tests/
-2. Docker\u90e8\u7f72
+2. Docker部署
 dockerfile
-\u590d\u5236
+复制
 FROM python:3.9-slim
 
 WORKDIR /app
 
-# \u5b89\u88c5\u4f9d\u8d56
+# 安装依赖
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# \u590d\u5236\u4ee3\u7801
+# 复制代码
 COPY . .
 
-# \u8bbe\u7f6e\u73af\u5883\u53d8\u91cf
+# 设置环境变量
 ENV PYTHONPATH=/app
 ENV LITERATURE_SEARCH_CACHE_DIR=/cache
 
-# \u521b\u5efa\u7f13\u5b58\u76ee\u5f55
+# 创建缓存目录
 RUN mkdir -p /cache
 
-# \u8fd0\u884c\u6d4b\u8bd5
+# 运行测试
 RUN python -m pytest tests/ -v
 
-# \u8bbe\u7f6e\u5165\u53e3\u70b9
+# 设置入口点
 ENTRYPOINT ["python", "-m", "literature_search.agent"]
-3. OpenClaw\u96c6\u6210
+3. OpenClaw集成
 bash
-\u590d\u5236
-# \u5b89\u88c5\u5230OpenClaw
+复制
+# 安装到OpenClaw
 openclaw skill install ./academic-literature-search
 
-# \u9a8c\u8bc1\u5b89\u88c5
+# 验证安装
 openclaw skill list | grep literature-search
 
-# \u6d4b\u8bd5\u6280\u80fd
-openclaw skill test academic-literature-search \\
+# 测试技能
+openclaw skill test academic-literature-search \
   --params '{"query": "test query", "max_results": 5}'
-\u516d\u3001\u6027\u80fd\u4f18\u5316\u5efa\u8bae
+六、性能优化建议
 
-1. \u7f13\u5b58\u4f18\u5316
-\u4f7f\u7528Redis\u4f5c\u4e3a\u5171\u4eab\u7f13\u5b58
-\u5b9e\u73b0\u667a\u80fd\u7f13\u5b58\u9884\u70ed
-\u5b9a\u671f\u6e05\u7406\u8fc7\u671f\u7f13\u5b58
-2. \u5e76\u53d1\u4f18\u5316
-\u8c03\u6574\u5e76\u53d1\u8fde\u63a5\u6570
-\u5b9e\u73b0\u8fde\u63a5\u6c60
-\u4f18\u5316\u8bf7\u6c42\u8c03\u5ea6
-3. \u5185\u5b58\u4f18\u5316
-\u4f7f\u7528\u751f\u6210\u5668\u5904\u7406\u5927\u91cf\u6570\u636e
-\u5b9e\u73b0\u5206\u9875\u52a0\u8f7d
-\u4f18\u5316\u6570\u636e\u7ed3\u6784
-4. \u7f51\u7edc\u4f18\u5316
-\u4f7f\u7528HTTP/2
-\u542f\u7528\u538b\u7f29
-\u5b9e\u73b0\u8bf7\u6c42\u5408\u5e76
-\u603b\u7ed3
+1. 缓存优化
+使用Redis作为共享缓存
+实现智能缓存预热
+定期清理过期缓存
+2. 并发优化
+调整并发连接数
+实现连接池
+优化请求调度
+3. 内存优化
+使用生成器处理大量数据
+实现分页加载
+优化数据结构
+4. 网络优化
+使用HTTP/2
+启用压缩
+实现请求合并
+总结
 
-\u8fd9\u4e2aOpenClaw\u5b66\u672f\u6587\u732e\u68c0\u7d22\u6280\u80fd\u5177\u6709\u4ee5\u4e0b\u7279\u70b9\uff1a
-\u4e13\u6ce8\u68c0\u7d22\uff1a\u4e13\u6ce8\u4e8e\u6587\u732e\u68c0\u7d22\u6838\u5fc3\u529f\u80fd\uff0c\u4e0d\u5305\u542bPDF\u89e3\u6790\u3001\u6587\u732e\u7ba1\u7406\u7b49\u8f85\u52a9\u529f\u80fd
-\u529f\u80fd\u5f3a\u5927\uff1a\u652f\u6301\u591a\u6570\u636e\u5e93\u3001\u9ad8\u7ea7\u67e5\u8be2\u3001\u667a\u80fd\u5904\u7406
-\u6027\u80fd\u4f18\u79c0\uff1a\u5e76\u53d1\u68c0\u7d22\u3001\u667a\u80fd\u7f13\u5b58\u3001\u6e10\u8fdb\u5f0f\u52a0\u8f7d
-\u6613\u4e8e\u4f7f\u7528\uff1a\u7b80\u6d01\u7684API\u3001\u8be6\u7ec6\u7684\u6587\u6863\u3001\u591a\u79cd\u8f93\u51fa\u683c\u5f0f
-\u53ef\u6269\u5c55\uff1a\u6a21\u5757\u5316\u8bbe\u8ba1\u3001\u652f\u6301\u63d2\u4ef6\u3001\u6613\u4e8e\u5b9a\u5236
-\u6309\u7167OpenClaw Skill\u6838\u5fc3\u7ed3\u6784\u6574\u7406\u540e\uff0c\u8fd9\u4e2a\u6280\u80fd\u53ef\u4ee5\uff1a
-\u76f4\u63a5\u88abOpenClaw\u5b89\u88c5\u548c\u4f7f\u7528
-\u901a\u8fc7\u914d\u7f6e\u6587\u4ef6\u548c\u73af\u5883\u53d8\u91cf\u7075\u6d3b\u914d\u7f6e
-\u652f\u6301\u547d\u4ee4\u884c\u3001Python API\u3001\u5e93\u7b49\u591a\u79cd\u4f7f\u7528\u65b9\u5f0f
-\u63d0\u4f9b\u5b8c\u6574\u7684\u6587\u6863\u548c\u6d4b\u8bd5
-\u6613\u4e8e\u7ef4\u62a4\u548c\u6269\u5c55
+这个OpenClaw学术文献检索技能具有以下特点：
+专注检索：专注于文献检索核心功能，不包含PDF解析、文献管理等辅助功能
+功能强大：支持多数据库、高级查询、智能处理
+性能优秀：并发检索、智能缓存、渐进式加载
+易于使用：简洁的API、详细的文档、多种输出格式
+可扩展：模块化设计、支持插件、易于定制
+按照OpenClaw Skill核心结构整理后，这个技能可以：
+直接被OpenClaw安装和使用
+通过配置文件和环境变量灵活配置
+支持命令行、Python API、库等多种使用方式
+提供完整的文档和测试
+易于维护和扩展
