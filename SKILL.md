@@ -139,21 +139,14 @@ async def search():
 ### 环境变量
 
 ```bash
-# API 密钥（可选但推荐）
-SEMANTIC_SCHOLAR_API_KEY="your_email@example.com"
+# API 密钥（可选，不设置也可运行，但建议设置自己的密钥）
+# 获取方式：
+# - Semantic Scholar: https://www.semanticscholar.org/product/api
+# - PubMed: https://www.ncbi.nlm.nih.gov/account/
+
+SEMANTIC_SCHOLAR_API_KEY="your_key_here"
 CROSSREF_API_EMAIL="your_email@example.com"
-PUBMED_API_KEY="your_api_key"
-
-# 网络配置
-HTTP_PROXY="http://proxy.example.com:8080"
-HTTPS_PROXY="http://proxy.example.com:8080"
-
-# 缓存配置
-LITERATURE_SEARCH_CACHE_ENABLED=true
-LITERATURE_SEARCH_CACHE_DIR="~/.cache/openclaw/literature"
-
-# 日志配置
-LITERATURE_SEARCH_LOG_LEVEL=INFO
+PUBMED_API_KEY="your_key_here"
 ```
 
 ### 配置文件
