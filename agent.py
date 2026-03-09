@@ -56,8 +56,10 @@ class Paper:
     source_database: Database = Database.SEMANTIC_SCHOLAR
     
     def to_dict(self) -> Dict:
-        """转换为字典"""
-        return asdict(self)
+    data = asdict(self)
+    data['source_database'] = self.source_database.value  # 转换为字符串
+    return data
+
 
 class LiteratureSearchEngine:
     """文献检索引擎核心"""
