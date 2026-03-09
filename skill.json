@@ -1,10 +1,13 @@
 {
   "name": "academic-literature-search",
   "version": "2.0.0",
-  "author": "OpenClaw Community",
+  "author": "jibeilindong",
+  "author_url": "https://github.com/jibeilindong",
   "description": "专业的学术文献检索工具，集成 Semantic Scholar、Crossref、PubMed、arXiv 等多个学术数据库",
   "homepage": "https://github.com/jibeilindong/academic-literature-search",
+  "repository": "https://github.com/jibeilindong/academic-literature-search",
   "license": "MIT",
+  "license_url": "https://opensource.org/licenses/MIT",
   "keywords": [
     "academic",
     "literature",
@@ -172,7 +175,7 @@
   "requires": {
     "env": ["SEMANTIC_SCHOLAR_API_KEY", "CROSSREF_API_EMAIL", "PUBMED_API_KEY"],
     "bins": ["python3"],
-    "anyBins": ["curl"]
+    "pips": ["requests", "aiohttp", "pandas", "pyyaml"]
   },
   "permissions": [
     "网络访问权限",
@@ -182,7 +185,6 @@
   "tags": ["academic", "research", "literature", "papers", "search"],
   "category": "research-tools",
   "metadata": {
-    "openclaw.emoji": "📚",
-    "version": "2.0.0"
+    "openclaw.emoji": "📚"
   }
 }
