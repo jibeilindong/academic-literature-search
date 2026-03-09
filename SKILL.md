@@ -163,3 +163,19 @@ PUBMED_API_KEY="your_key_here"
 ## 许可证
 
 MIT License
+
+## 安全与隐私
+
+### 数据流向
+- 检索查询会发送到第三方API：Semantic Scholar、Crossref、PubMed、arXiv
+- 搜索关键词和论文元数据会被发送到这些服务
+
+### 建议
+- 使用虚拟环境运行：`python -m venv venv && source venv/bin/activate`
+- 设置自己的 API 密钥以使用您的凭证
+- 默认使用 openclaw@example.com 作为 Crossref 邮箱
+- 缓存目录：~/.cache/openclaw/literature
+
+### 隐私
+- 如需高隐私保护，避免使用默认凭证
+- 可在代码中审查网络请求目的地
