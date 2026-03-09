@@ -173,9 +173,13 @@
     }
   },
   "requires": {
-    "env": ["SEMANTIC_SCHOLAR_API_KEY", "CROSSREF_API_EMAIL", "PUBMED_API_KEY"],
+    "env": {
+      "SEMANTIC_SCHOLAR_API_KEY": "可选，Semantic Scholar API 密钥",
+      "CROSSREF_API_EMAIL": "可选，推荐提供以提高请求限制",
+      "PUBMED_API_KEY": "可选，PubMed API 密钥"
+    },
     "bins": ["python3"],
-    "pips": ["requests", "aiohttp", "pandas", "pyyaml"]
+    "pips": ["requests", "aiohttp", "pandas", "pyyaml", "aiofiles"]
   },
   "permissions": [
     "网络访问权限",
